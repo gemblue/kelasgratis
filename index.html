@@ -155,69 +155,53 @@
             </button>
         </div>
 
-        <!-- Profesi Tech (static anchors, target blank) -->
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 text-center">
+        <!-- Profesi Tech (data-driven) -->
+        <div x-data="professions()" class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 text-center">
             <div class="flex flex-col items-center mb-3 gap-1">
-                <h4 class="text-sm font-semibold text-gray-700">Bingung mencari kelas apa?</h4>
+                <h4 class="text-sm font-semibold text-gray-700">Mau belajar dengan lebih terarah?</h4>
                 <span class="text-xs text-gray-500">Langsung ambil rekomendasi berdasarkan minat profesi saja:</span>
             </div>
 
             <div class="flex gap-2 flex-wrap justify-center">
-                <a href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-3 py-2 bg-white border border-gray-100 rounded-full text-sm text-gray-700 hover:shadow-md">
-                    <i class="fa-solid fa-layer-group text-indigo-500"></i>
-                    <span>Fullstack</span>
-                </a>
+                <template x-for="p in professions" :key="p.id">
+                    <a href="#" @click.prevent="open(p)" :class="p.comingSoon ? 'opacity-50 cursor-not-allowed' : ''" class="inline-flex items-center gap-2 px-3 py-2 bg-white border border-gray-100 rounded-full text-sm text-gray-700 hover:shadow-md">
+                        <i :class="p.iconClass"></i>
+                        <span x-text="p.title"></span>
+                        <template x-if="p.comingSoon">
+                            <span class="ml-1 text-xs font-semibold text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">Coming Soon</span>
+                        </template>
+                    </a>
+                </template>
+            </div>
 
-                <a href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-3 py-2 bg-white border border-gray-100 rounded-full text-sm text-gray-700 hover:shadow-md">
-                    <i class="fa-solid fa-code text-teal-500"></i>
-                    <span>Frontend</span>
-                </a>
+            <!-- Profession detail modal -->
+            <div x-show="modalOpen" x-cloak x-trap.noscroll class="fixed inset-0 z-50 flex items-center justify-center p-6">
+                <div class="absolute inset-0 bg-black/50" @click="close()" aria-hidden="true"></div>
+                <div class="relative bg-white rounded-2xl shadow-xl max-w-4xl w-full mx-auto overflow-hidden">
+                    <div class="p-6 md:p-10">
+                        <div class="flex items-start gap-4">
+                            <div class="w-16 h-16 flex items-center justify-center rounded-lg bg-surface text-2xl text-primary">
+                                <span x-html="selected ? ('<i class=\' ' + selected.iconClass + ' \'></i>') : ''"></span>
+                            </div>
+                            <div class="flex-1 text-left">
+                                <h3 class="text-xl font-bold" x-text="selected ? selected.title : ''"></h3>
+                                <p class="text-sm text-gray-500 mt-2" x-text="selected ? selected.description : ''"></p>
+                                <div class="mt-4 flex items-center gap-4">
+                                    <div class="text-sm text-gray-700">Kisaran gaji:</div>
+                                    <div class="px-3 py-1 bg-gray-100 rounded-full text-sm font-semibold text-gray-800" x-text="selected ? selected.salary : ''"></div>
+                                </div>
+                            </div>
+                            <button @click="close()" class="text-gray-400 hover:text-gray-600 ml-4" aria-label="Tutup modal">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                            </button>
+                        </div>
 
-                <a href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-3 py-2 bg-white border border-gray-100 rounded-full text-sm text-gray-700 hover:shadow-md">
-                    <i class="fa-solid fa-server text-indigo-600"></i>
-                    <span>Backend</span>
-                </a>
-
-                <a href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-3 py-2 bg-white border border-gray-100 rounded-full text-sm text-gray-700 hover:shadow-md">
-                    <i class="fa-solid fa-database text-indigo-600"></i>
-                    <span>DB Administrator</span>
-                </a>
-
-                <a href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-3 py-2 bg-white border border-gray-100 rounded-full text-sm text-gray-700 hover:shadow-md opacity-50 cursor-not-allowed">
-                    <i class="fa-solid fa-bar-chart text-yellow-600"></i>
-                    <span>Data Scientist</span>
-                    <span class="ml-1 text-xs font-semibold text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">Coming Soon</span>
-                </a>
-
-                <a href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-3 py-2 bg-white border border-gray-100 rounded-full text-sm text-gray-700 hover:shadow-md">
-                    <i class="fa-solid fa-robot text-pink-600"></i>
-                    <span>AI Engineer</span>
-                </a>
-
-                <a href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-3 py-2 bg-white border border-gray-100 rounded-full text-sm text-gray-700 hover:shadow-md">
-                    <i class="fa-solid fa-cloud text-sky-600"></i>
-                    <span>DevOps</span>
-                </a>
-
-                <a href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-3 py-2 bg-white border border-gray-100 rounded-full text-sm text-gray-700 hover:shadow-md">
-                    <i class="fa-solid fa-shield-halved text-rose-600"></i>
-                    <span>Cyber Security</span>
-                </a>
-
-                <a href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-3 py-2 bg-white border border-gray-100 rounded-full text-sm text-gray-700 hover:shadow-md">
-                    <i class="fa-solid fa-pen-ruler text-emerald-600"></i>
-                    <span>UI/UX</span>
-                </a>
-                
-                <a href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-3 py-2 bg-white border border-gray-100 rounded-full text-sm text-gray-700 hover:shadow-md">
-                    <i class="fa-solid fa-microchip text-orange-500"></i>
-                    <span>Gen AI</span>
-                </a>
-
-                <a href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-3 py-2 bg-white border border-gray-100 rounded-full text-sm text-gray-700 hover:shadow-md">
-                    <i class="fa-solid fa-bug text-rose-500"></i>
-                    <span>QA / Tester</span>
-                </a>
+                        <div class="mt-6 flex justify-end gap-3">
+                            <a :href="selected ? selected.link : '#'" target="_blank" rel="noopener" class="bg-primary text-white px-6 py-2 rounded-lg font-semibold hover:bg-primaryHover transition" x-show="selected && !selected.comingSoon">Pelajari Sekarang</a>
+                            <button @click="close()" class="px-6 py-2 rounded-lg border border-gray-200 text-gray-600">Tutup</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -805,6 +789,33 @@
             select(item) {
                 this.isOpen = false;
                 window.location.href = item.href;
+            }
+        }));
+
+        Alpine.data('professions', () => ({
+            professions: [
+                { id: 'fullstack', title: 'Fullstack', iconClass: 'fa-solid fa-layer-group text-indigo-500', description: 'Kuasai frontend & backend untuk membangun aplikasi end‑to‑end.', salary: 'Rp 8–20 juta / bulan', link: 'https://kelasfullstack.id', comingSoon: false },
+                { id: 'frontend', title: 'Frontend', iconClass: 'fa-solid fa-code text-teal-500', description: 'Bangun tampilan interaktif dengan HTML, CSS, JS dan framework modern.', salary: 'Rp 6–18 juta / bulan', link: 'https://www.codepolitan.com/roadmap/roadmap-frontend-reactjs/', comingSoon: false },
+                { id: 'backend', title: 'Backend', iconClass: 'fa-solid fa-server text-indigo-600', description: 'Bangun API, database, dan logika bisnis server‑side.', salary: 'Rp 7–20 juta / bulan', link: 'https://ai-laravel.codepolitan.com/', comingSoon: false },
+                { id: 'dbadmin', title: 'DB Administrator', iconClass: 'fa-solid fa-database text-indigo-600', description: 'Kelola database produksi: backup, tuning, dan keamanan.', salary: 'Rp 6–15 juta / bulan', link: 'https://www.codepolitan.com/roadmap/database-administrator/', comingSoon: false },
+                { id: 'datasci', title: 'Data Scientist', iconClass: 'fa-solid fa-bar-chart text-yellow-600', description: 'Analisis data & bangun model ML untuk produk data‑driven.', salary: 'Rp 8–25 juta / bulan', link: '#', comingSoon: true },
+                { id: 'ai', title: 'AI Engineer', iconClass: 'fa-solid fa-robot text-pink-600', description: 'Bangun dan deploy model ML/NLP untuk aplikasi cerdas.', salary: 'Rp 10–30 juta / bulan', link: '#', comingSoon: false },
+                { id: 'devops', title: 'DevOps', iconClass: 'fa-solid fa-cloud text-sky-600', description: 'Otomasi deployment, CI/CD, dan infrastruktur cloud.', salary: 'Rp 8–25 juta / bulan', link: '#', comingSoon: false },
+                { id: 'security', title: 'Cyber Security', iconClass: 'fa-solid fa-shield-halved text-rose-600', description: 'Amankan aplikasi & infrastruktur dari ancaman nyata.', salary: 'Rp 7–20 juta / bulan', link: 'https://jagoansiber.com', comingSoon: false },
+                { id: 'uiux', title: 'UI/UX', iconClass: 'fa-solid fa-pen-ruler text-emerald-600', description: 'Desain antarmuka & pengalaman pengguna yang efektif.', salary: 'Rp 5–15 juta / bulan', link: '#', comingSoon: false },
+                { id: 'genai', title: 'Gen AI', iconClass: 'fa-solid fa-microchip text-orange-500', description: 'Gunakan model generatif untuk solusi kreatif dan produktif.', salary: 'Rp 8–30 juta / bulan', link: 'https://ruangai.id', comingSoon: false },
+                { id: 'qa', title: 'QA / Tester', iconClass: 'fa-solid fa-bug text-rose-500', description: 'Pastikan kualitas produk melalui testing manual & otomasi.', salary: 'Rp 4–12 juta / bulan', link: '#', comingSoon: false }
+            ],
+            selected: null,
+            modalOpen: false,
+            open(p) {
+                if (p.comingSoon) return;
+                this.selected = p;
+                this.modalOpen = true;
+            },
+            close() {
+                this.modalOpen = false;
+                this.selected = null;
             }
         }));
       });
